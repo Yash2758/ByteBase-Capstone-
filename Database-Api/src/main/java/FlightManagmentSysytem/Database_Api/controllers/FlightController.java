@@ -13,8 +13,17 @@ import java.util.UUID;
 @RequestMapping("/api/v1/db/flight")
 public class FlightController {
 
-    @Autowired
     private FlightRepository flightRepository;
+
+    @Autowired
+    public FlightController(FlightRepository flightRepository) {
+        this.flightRepository = flightRepository;
+    }
+
+    public ResponseEntity<Boolean> validateFlight(@PathVariable String flightNumber) {
+        boolean flightExists = flightRepository.existsByFlightNumber(flightNumber);
+        return new ResponseEntity<>(flightExists, HttpStatus.OK);
+    }
 
     @GetMapping("/{flightId}")
     public ResponseEntity<Flight> getFlight(@PathVariable UUID flightId) {
