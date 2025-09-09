@@ -46,8 +46,13 @@ public class EmployeeController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @GetMapping("/{email}")
-    public ResponseEntity<> getEmployee(@PathVariable String email){
+    public ResponseEntity<Employee> getEmployeeByEmail(@PathVariable String email){
        Employee employee =  employeeRepository.findEmployeeByEmail(email);
        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
+    @GetMapping("/{role}")
+    public ResponseEntity<Employee> getEmployeeByRole(@PathVariable String role){
+        Employee employee =  employeeRepository.findEmployeeByRole(role);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 }
