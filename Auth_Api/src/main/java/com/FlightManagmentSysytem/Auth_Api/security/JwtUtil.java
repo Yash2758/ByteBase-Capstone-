@@ -14,19 +14,17 @@ public class JwtUtil {
     private final Key key = Keys.hmacShaKeyFor(secret.getBytes());
     private final long expiration = 1000 * 60 * 60; // 1 hour
 
-    // Generate token with email, password, role
-    public String generateToken(String email, String password, String role) {
+    // Generate token with email and password only
+    public String generateToken(String email, String password) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("password", password)   // store password
-                .claim("role", role)          // store role
+                .claim("password", password)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Verify token
     public boolean verifyToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -37,7 +35,6 @@ public class JwtUtil {
         }
     }
 
-    // Decrypt token and return details
     public String decryptToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -45,6 +42,6 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject() + "|" + claims.get("password") + "|" + claims.get("role");
+        return claims.getSubject() + "|" + claims.get("password");
     }
 }
